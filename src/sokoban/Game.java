@@ -35,11 +35,11 @@ public class Game extends Canvas {
     //
     // Game
     //
-    public boolean process() {
+    public boolean Process() {
         return false;
     }
 
-    public void render(Graphics ctx) {
+    public void Render(Graphics ctx) {
         ctx.setColor(Color.RED);
         ctx.drawString("Sokoban will soon be playable in this window...", 40, 40);
 
@@ -62,6 +62,6 @@ public class Game extends Canvas {
     @Override
     public void paint(Graphics ctx) {
         System.out.println("Redrawing screen");
-        render(ctx);
+        Render(ctx);
     }
 }

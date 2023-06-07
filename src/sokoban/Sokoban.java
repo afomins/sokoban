@@ -34,7 +34,7 @@ public class Sokoban {
         System.out.println("Starting game loop");
         while (win_is_closing.get() == 0) {
             // Process game logic and redraw the screen when game state changes
-            if (game.process()) {
+            if (game.Process()) {
                 frame.repaint();
             }
         }
