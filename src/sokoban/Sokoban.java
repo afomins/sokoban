@@ -29,7 +29,7 @@ public class Sokoban {
             }
         };
         frame.addWindowListener(win_listener);
-
+        game.Init();
         // Run game loop while window is open
         System.out.println("Starting game loop");
         while (win_is_closing.get() == 0) {
