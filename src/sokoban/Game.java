@@ -62,21 +62,45 @@ public class Game extends Canvas {
     // Game
     //
 //    Обьявляю тут Массив, 
-    Interfaces.IBlock[][] blocks = new Interfaces.IBlock[][] {
-    	{new Brick (), new Brick (), new Brick (), new Brick (), new Brick (), new Brick (), new Brick (), new Brick (), new Brick (), new Brick ()},
-    	{new Brick (), new Ground(), new Ground(), new Ground(), new Ground(), new Ground(), new Ground(), new Ground(), new Ground(), new Brick ()},
-    	{new Brick (), new Ground(), new Brick(), new Ground(), new Ground(), new Ground(), new Ground(), new Brick(), new Ground(), new Brick ()},
-    	{new Brick (), new Ground(), new Ground(), new Ground(), new Ground(), new Ground(), new Ground(), new Ground(), new Ground(), new Brick ()},
-    	{new Brick (), new Ground(), new Brick(), new Ground(), new Ground(), new Ground(), new Ground(), new Brick(), new Ground(), new Brick ()},
-    	{new Brick (), new Ground(), new Brick(), new Brick(), new Brick(), new Brick(), new Brick(), new Brick(), new Ground(), new Brick ()},
-    	{new Brick (), new Ground(), new Ground(), new Ground(), new Ground(), new Ground(), new Ground(), new Ground(), new Ground(), new Brick ()},
-    	{new Brick (), new Ground(), new Ground(), new Ground(), new Ground(), new Ground(), new Ground(), new Ground(), new Ground(), new Brick ()},
-    	{new Brick (), new Ground(), new Ground(), new Ground(), new Ground(), new Ground(), new Ground(), new Ground(), new Ground(), new Brick ()},
-    	{new Brick (), new Brick (), new Brick (), new Brick (), new Brick (), new Brick (), new Brick (), new Brick (), new Brick (), new Brick ()},
-    } ;
-    
+    Interfaces.IBlock[][] blocks; 
+    int lvl_hght ;
+	int lvl_wdt ;
+	
     public void Init() {
-    	System.out.println("Initialazing game");
+    	String level1[] = {
+    	    "XXXXXXXXXX",
+    	    "X........X",
+    	    "X.XX..XX.X",
+    	    "X........X",
+    	    "X..XXXX..X",
+    	    "X........X",
+    	    "XXXXXXXXXX"
+    	};
+    	
+    	
+    	lvl_hght = level1.length;
+    	 lvl_wdt = level1[0].length();
+    
+    	
+   	
+   	blocks = new Interfaces.IBlock[lvl_wdt][lvl_hght];
+    	
+    	
+    	
+  	for (int j= 0; j< lvl_hght ;j++) {
+  		
+  		for(int i=0; i< lvl_wdt;i++) {
+//  			System.out.printf("i=%d j=%d\n", j, i);
+  			char a =level1[j].charAt(i);
+  			if ( a == 'X') {
+  				blocks[i][j] = new Brick ();
+  			} else {
+  				blocks[i][j] = new Ground ();
+  			}
+  		}
+  	}
+    		
+    		
     }
 
     public boolean Process() {
@@ -90,10 +114,10 @@ public class Game extends Canvas {
         int o = 10;
         int b = 10;
         
-      for (int j = 0; j< 10; j++ ) {
-    		   for (int i = 0; i<10; i++) {
-    			   System.out.printf("i=%d j=%d\n", j, i);
-    		   		blocks[j][i].Draw(ctx, b , o );
+      for (int j = 0; j< lvl_hght; j++ ) {
+    		   for (int i = 0; i<lvl_wdt; i++) {
+//    			   System.out.printf("i=%d j=%d\n", j, i);
+    		   		blocks[i][j].Draw(ctx, b , o );
     		   		b= b+Config.BLOCK_WIDTH;
     		   }
     	b= 10;	   
