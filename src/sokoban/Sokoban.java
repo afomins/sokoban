@@ -19,7 +19,7 @@ public class Sokoban {
         Canvas canvas = new Canvas() {
             @Override
             public void paint(Graphics ctx) {
-                System.out.println("Redering game");
+                Utils.Log("Redering frame");
                 game.Render(ctx);
             }
         };
@@ -61,7 +61,7 @@ public class Sokoban {
         canvas.addKeyListener(key_listener);
 
         // Run game loop
-        System.out.println("Starting game loop");
+        Utils.Log("Starting game loop");
         while (quit.get() == 0) {
             // Process game
             boolean redraw = game.Process(kbd_man);
@@ -76,7 +76,7 @@ public class Sokoban {
         }
 
         // Do cleanup
-        System.out.println("Stopping game loop");
+        Utils.Log("Stopping game loop");
         frame.dispose();
     }
 }

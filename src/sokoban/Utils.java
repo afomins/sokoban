@@ -31,19 +31,21 @@ public class Utils {
         private List<KeyEvent> event_queue = new LinkedList<KeyEvent>();
 
         synchronized public void Pressed(int key) {
+            // Enqueue PRESSED
             event_queue.add(new KeyEvent(key, KeyState.PRESSED));
         }
 
         synchronized public void Released(int key) {
+            // Enqueue RELEASED
             event_queue.add(new KeyEvent(key, KeyState.RELEASED));
         }
 
-        synchronized public KeyState GetStatus(int key) {
+        synchronized public KeyState GetState(int key) {
             return key_map.containsKey(key) ? key_map.get(key) : KeyState.NONE;
         }
 
-        synchronized public void PutStatus(int key, KeyState status) {
-            KeyState old_status = GetStatus(key);
+        synchronized public void PutState(int key, KeyState status) {
+            KeyState old_status = GetState(key);
             if (old_status == status) {
                 return;
             }
@@ -53,19 +55,33 @@ public class Utils {
         synchronized public void Process() {
             // Process existing states
             for (Map.Entry<Integer, KeyState> e: key_map.entrySet()) {
-                KeyState old_status = e.getValue();
-                KeyState new_status =
-                    old_status == KeyState.PRESSED  ? KeyState.HOLD : // pressed -> hold
-                    old_status == KeyState.RELEASED ? KeyState.NONE : // released -> none
-                    old_status;                                       // unchanged
-                PutStatus(e.getKey(), new_status);
+                KeyState old_state = e.getValue();
+                KeyState new_state =
+                    old_state == KeyState.PRESSED  ? KeyState.HOLD : // PRESSED -> HOLD
+                    old_state == KeyState.RELEASED ? KeyState.NONE : // RELEASED -> NONE
+                    old_state;                                       // unchanged
+                PutState(e.getKey(), new_state);
             }
 
             // Apply new states from queue
             for (KeyEvent e : event_queue) {
-                PutStatus(e.key, e.state);
+                KeyState old_state = GetState(e.key);
+                KeyState new_state = e.state;
+                if (new_state == KeyState.PRESSED && old_state != KeyState.NONE) {
+                    // Ignore duplicaing PRESSED events originating by KeyListener
+                    continue;
+                }
+                PutState(e.key, e.state);
             }
             event_queue.clear();
         }
     }
+
+    //
+    // Utils
+    //
+    public static void Log(String str) {
+        System.out.println(str);
+    }
+
 }

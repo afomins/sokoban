@@ -41,11 +41,11 @@ public class Game {
 
     public boolean Process(Utils.KeyboardManager kbd_man) {
         boolean redraw = false;
-        key_space = kbd_man.GetStatus(KeyEvent.VK_SPACE);
+        key_space = kbd_man.GetState(KeyEvent.VK_SPACE);
         if (key_space_prev != key_space) {
+            Utils.Log("SPACE :: " + key_space_prev + " -> " + key_space);
             key_space_prev = key_space;
             redraw = true;
-            System.out.println("key_space=" + key_space);
         }
         return redraw;
     }
