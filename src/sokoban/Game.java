@@ -1,8 +1,10 @@
 package sokoban;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.util.Set;
 
-public class Game extends Canvas {
+public class Game {
     //
     // Game objects
     //
@@ -11,21 +13,19 @@ public class Game extends Canvas {
         public void Draw(Graphics ctx, int x, int y) {
            Color ground_brown = new Color(73, 50, 4);
            Color nugget_yellow = new Color(118,87,25);
-           Color grass_green= new Color(31,82,15);
+           Color grass_green = new Color(31,82,15);
             ctx.setColor(ground_brown);
             ctx.fillRect(x, y, Config.BLOCK_WIDTH, Config.BLOCK_HEIGHT);
-            
+
             ctx.setColor(nugget_yellow);
             ctx.fillRect(x, y, 12, 9);
-            ctx.fillRect(x+32, y+12, 12, 9);
-            ctx.fillRect(x+48, y+48, 12, 9);
-            ctx.fillRect(x+3, y+24, 12, 9);
-            ctx.fillRect(x+22, y+40, 12, 9);
-            
-            ctx.setColor(grass_green);
-            ctx.fillRect(x+48, y+30, 12, 9);
+            ctx.fillRect(x + 32, y + 12, 12, 9);
+            ctx.fillRect(x + 48, y + 48, 12, 9);
+            ctx.fillRect(x + 3, y + 24, 12, 9);
+            ctx.fillRect(x + 22, y + 40, 12, 9);
 
-           
+            ctx.setColor(grass_green);
+            ctx.fillRect(x + 48, y + 30, 12, 9);
         }
     }
 
@@ -38,30 +38,29 @@ public class Game extends Canvas {
             ctx.fillRect(x, y, Config.BLOCK_WIDTH, Config.BLOCK_HEIGHT);
             ctx.setColor(nugget_gray);
             ctx.fillRect(x, y, 12, 9);
-            ctx.fillRect(x+24, y, 12, 9);
-            ctx.fillRect(x+48, y, 12, 9);  
-            
-            ctx.fillRect(x+12, y+12, 12, 9);
-            ctx.fillRect(x+36, y+12, 12, 9);
-            
-            ctx.fillRect(x, y+24, 12, 9);
-            ctx.fillRect(x+24, y+24, 12, 9);
-            ctx.fillRect(x+48, y+24, 12, 9);
-            
-            ctx.fillRect(x+12, y+36, 12, 9);
-            ctx.fillRect(x+36, y+36, 12, 9);
-            
-            ctx.fillRect(x, y+48, 12, 9);
-            ctx.fillRect(x+24, y+48, 12, 9);
-            ctx.fillRect(x+48, y+48, 12, 9);
-           
+            ctx.fillRect(x + 24, y, 12, 9);
+            ctx.fillRect(x + 48, y, 12, 9);  
+
+            ctx.fillRect(x + 12, y + 12, 12, 9);
+            ctx.fillRect(x + 36, y + 12, 12, 9);
+
+            ctx.fillRect(x, y + 24, 12, 9);
+            ctx.fillRect(x + 24, y + 24, 12, 9);
+            ctx.fillRect(x + 48, y + 24, 12, 9);
+
+            ctx.fillRect(x + 12, y + 36, 12, 9);
+            ctx.fillRect(x + 36, y + 36, 12, 9);
+
+            ctx.fillRect(x, y + 48, 12, 9);
+            ctx.fillRect(x + 24, y + 48, 12, 9);
+            ctx.fillRect(x + 48, y + 48, 12, 9);
         }
     }
 
     Interfaces.IBlock[][] blocks; 
     int lvl_height;
     int lvl_width;
-    
+
     public boolean Init() {
         String level1[] = {
             "XXXXXXXXXX",
@@ -91,22 +90,36 @@ public class Game extends Canvas {
                 char a = level1[j].charAt(i);
 
                 if ( a == 'X') {
-                    blocks[i][j] = new Brick ();
+                    blocks[i][j] = new Brick();
                 } else {
-                    blocks[i][j] = new Ground ();
+                    blocks[i][j] = new Ground();
                 }
             }
         }
         return true;
     }
 
-    public boolean Process() {
-        return false;
+    //
+    // Game
+    //
+    private int key_press_num = 0;
+
+    public boolean Process(Set<Integer> key_pressed) {
+        boolean redraw = false;
+        if (key_pressed.contains(KeyEvent.VK_SPACE)) {
+            Utils.Log("Space key press has been detected :: key_press_num=" + key_press_num);
+            key_press_num++;
+            redraw = true;
+        }
+        return redraw;
     }
 
     public void Render(Graphics ctx) {
         ctx.setColor(Color.RED);
-        ctx.drawString("Sokoban soon will be playable in this window...", 40, 40);
+        ctx.drawString("Press SPACE button...", 800, 40);
+
+        ctx.setColor(Color.CYAN);
+        ctx.fillRect(140, 80, 128, 128);
 
         int o = 10;
         int b = 10;
@@ -119,16 +132,12 @@ public class Game extends Canvas {
             o = o + Config.BLOCK_WIDTH;
             b = 10;
         }
-    }
- 
-    //
-    // java.awt.Canvas
-    //
-    @Override
-    public void paint(Graphics ctx) {
-        System.out.println("Redrawing screen");
-        Render(ctx);
+
+        Brick brick = new Brick();
+        Ground ground = new Ground();
+        for (int i = 0; i < key_press_num + 1; i++) {
+            ((i % 2 == 0) ? brick : ground)
+                .Draw(ctx, 800 + i * 25, 100 + i * 25);
+        }
     }
 }
-    
-
