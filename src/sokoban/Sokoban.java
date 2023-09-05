@@ -1,5 +1,7 @@
 package sokoban;
 
+import java.awt.Canvas;
+import java.awt.Graphics;
 import java.awt.event.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -13,30 +15,64 @@ public class Sokoban {
         // Create instance of the game
         Game game = new Game();
 
-        // Create game window
+        // Create canvas where to draw
+        Canvas canvas = new Canvas() {
+            @Override
+            public void paint(Graphics ctx) {
+                System.out.println("Redering game");
+                game.Render(ctx);
+            }
+        };
+
+        // Create game window and attach canvas
         JFrame frame = new JFrame();
-        frame.add(game);
+        frame.add(canvas);
         frame.setTitle(Config.NAME + " " + Config.VERSION);
         frame.setSize(Config.SCREEN_WIDTH, Config.SCREEN_HEIGHT);
         frame.setVisible(true);
 
         // Register window listener to handle window closing event
-        final AtomicInteger win_is_closing = new AtomicInteger(0);
+        final AtomicInteger quit = new AtomicInteger(0);
         WindowListener win_listener = new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                win_is_closing.set(1); // quit game 
+                quit.set(1); 
             }
         };
         frame.addWindowListener(win_listener);
 
-        // Run game loop while window is open
-        System.out.println("Starting game loop");
-        while (win_is_closing.get() == 0) {
-            // Process game logic and redraw the screen when game state changes
-            if (game.Process()) {
-                frame.repaint();
+        // Register key listener to handle keyboard events
+        Utils.KeyboardManager kbd_man = new Utils.KeyboardManager();
+        KeyListener key_listener = new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
             }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                kbd_man.Pressed(e.getKeyCode());
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                kbd_man.Released(e.getKeyCode());
+            }
+        };
+        canvas.addKeyListener(key_listener);
+
+        // Run game loop
+        System.out.println("Starting game loop");
+        while (quit.get() == 0) {
+            // Process game
+            boolean redraw = game.Process(kbd_man);
+
+            // Render frame if necessary
+            if (redraw) {
+                canvas.repaint();
+            }
+
+            // Process keyboard manager 
+            kbd_man.Process();
         }
 
         // Do cleanup

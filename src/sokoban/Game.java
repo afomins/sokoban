@@ -1,8 +1,9 @@
 package sokoban;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 
-public class Game extends Canvas {
+public class Game {
     //
     // Game objects
     //
@@ -35,13 +36,23 @@ public class Game extends Canvas {
     //
     // Game
     //
-    public boolean Process() {
-        return false;
+    private Utils.KeyboardManager.KeyState key_space = Utils.KeyboardManager.KeyState.NONE;
+    private Utils.KeyboardManager.KeyState key_space_prev = Utils.KeyboardManager.KeyState.NONE;
+
+    public boolean Process(Utils.KeyboardManager kbd_man) {
+        boolean redraw = false;
+        key_space = kbd_man.GetStatus(KeyEvent.VK_SPACE);
+        if (key_space_prev != key_space) {
+            key_space_prev = key_space;
+            redraw = true;
+            System.out.println("key_space=" + key_space);
+        }
+        return redraw;
     }
 
     public void Render(Graphics ctx) {
         ctx.setColor(Color.RED);
-        ctx.drawString("Sokoban will soon be playable in this window...", 40, 40);
+        ctx.drawString("State of the [SPACE] is " + key_space, 40, 40);
 
         ctx.setColor(Color.CYAN);
         ctx.fillRect(140, 80, 128, 128);
@@ -54,14 +65,5 @@ public class Game extends Canvas {
 
         FlagUA flag2 = new FlagUA();
         flag2.Draw(ctx, 400 + 100, 200);
-    }
-
-    //
-    // java.awt.Canvas
-    //
-    @Override
-    public void paint(Graphics ctx) {
-        System.out.println("Redrawing screen");
-        Render(ctx);
     }
 }
