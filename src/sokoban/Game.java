@@ -2,6 +2,7 @@ package sokoban;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.Set;
 
 public class Game {
     //
@@ -36,24 +37,19 @@ public class Game {
     //
     // Game
     //
-    private Utils.KeyboardManager.KeyState key_space = Utils.KeyboardManager.KeyState.NONE;
-    private Utils.KeyboardManager.KeyState key_space_prev = Utils.KeyboardManager.KeyState.NONE;
+    private int key_press_num = 0;
 
-    public boolean Process(Utils.KeyboardManager kbd_man) {
+    public boolean Process(Set<Integer> key_pressed) {
         boolean redraw = false;
-        key_space = kbd_man.GetState(KeyEvent.VK_SPACE);
-        if (key_space_prev != key_space) {
-            Utils.Log("SPACE :: " + key_space_prev + " -> " + key_space);
-            key_space_prev = key_space;
+        if (key_pressed.contains(KeyEvent.VK_SPACE)) {
+            Utils.Log("Space key press has been detected :: key_press_num=" + key_press_num);
+            key_press_num++;
             redraw = true;
         }
         return redraw;
     }
 
     public void Render(Graphics ctx) {
-        ctx.setColor(Color.RED);
-        ctx.drawString("State of the [SPACE] is " + key_space, 40, 40);
-
         ctx.setColor(Color.CYAN);
         ctx.fillRect(140, 80, 128, 128);
 
@@ -61,7 +57,9 @@ public class Game {
         ctx.fillRect(140 + 30, 80 + 30, 128, 128);
 
         FlagLV flag1 = new FlagLV();
-        flag1.Draw(ctx, 400, 200);
+        for (int i = 0; i < key_press_num + 1; i++) {
+            flag1.Draw(ctx, 400 + i * 25, 200 + i * 25);
+        }
 
         FlagUA flag2 = new FlagUA();
         flag2.Draw(ctx, 400 + 100, 200);

@@ -3,7 +3,10 @@ package sokoban;
 import java.awt.Canvas;
 import java.awt.Graphics;
 import java.awt.event.*;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.JFrame;
 
@@ -42,7 +45,8 @@ public class Sokoban {
         frame.addWindowListener(win_listener);
 
         // Register key listener to handle keyboard events
-        Utils.KeyboardManager kbd_man = new Utils.KeyboardManager();
+        Set<Integer> key_pressed = new HashSet<Integer>();
+        ReentrantLock key_pressed_mutex = new ReentrantLock();
         KeyListener key_listener = new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -50,29 +54,39 @@ public class Sokoban {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                kbd_man.Pressed(e.getKeyCode());
+                key_pressed_mutex.lock();
+                key_pressed.add(e.getKeyCode());
+                key_pressed_mutex.unlock();
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                kbd_man.Released(e.getKeyCode());
             }
         };
         canvas.addKeyListener(key_listener);
 
+        // Focus of the canvas to receive keyboard input
+        canvas.requestFocus();
+
         // Run game loop
         Utils.Log("Starting game loop");
         while (quit.get() == 0) {
+            // Begin frame
+            key_pressed_mutex.lock();
+
             // Process game
-            boolean redraw = game.Process(kbd_man);
+            boolean redraw = game.Process(key_pressed);
 
             // Render frame if necessary
             if (redraw) {
                 canvas.repaint();
             }
 
-            // Process keyboard manager 
-            kbd_man.Process();
+            // Clear key presses 
+            key_pressed.clear();
+
+            // End frame
+            key_pressed_mutex.unlock();
         }
 
         // Do cleanup
