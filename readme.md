@@ -19,26 +19,27 @@ X........X
 XXXXXXXXXX
 ```
 
-<h1>Task #2 - "Hero movement"</h1>
+<h1>Task #2 - "Choose your hero"</h1>
+
 1. Create sub-class `Game.Hero` with following properties:
     * The `Game.Hero` should implement the `Interfaces.IBlock` interface
-    * The `Game.Ground.Draw()` method should draw a 64x64 charater that would represent a character when looking at him from above
+    * The `Game.Hero.Draw()` method should draw a 64x64 block that would look like person when looking at him from above
 
 2. Update the level loading method in such a way that it would instantiate `Game.Hero` object when detecting `@` char in level description and store it in private member `hero`
 
-3. Save coordinates of the `hero` instance in private `hero_x`/`hero_y` variables
+3. Save coordinates of the `hero` instance in private variables `hero_x`/`hero_y`
 
-4. Make sure that only one `Game.Hero` instance can be spawned
+4. Make sure only one instance `Game.Hero` is spawned
 
-5. Update `Game.Render()` to draw hero **on top of the level** in `hero_x`/`hero_y` coordinates
+5. Update the `Game.Render()` method to draw hero **on top of the level** in `hero_x`/`hero_y` coordinates
 
-6. Update the `Game.Process()` to increment the `hero_x`/`hero_y` coordinates when pressing arrow keys:
+6. Update the `Game.Process()` method to update the `hero_x`/`hero_y` coordinates when pressing arrow keys and redraw the frame:
 ```
-   if (kbd_man.GetState(KeyEvent.VK_LEFT) == Utils.KeyboardManager.KeyState.PRESSED) {
+   if (key_pressed.contains(KeyEvent.VK_RIGHT)) {
        hero_x += 1;
    }
 ```
 
-8. Make sure that `hero` does not fall beyond the boundaries of the level
+8. Make sure that coordinates of the `hero` does not go past the boundaries of the level
 
 9. Make sure that `hero` can walk only on the ground
