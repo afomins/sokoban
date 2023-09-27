@@ -56,10 +56,35 @@ public class Game {
             ctx.fillRect(x + 48, y + 48, 12, 9);
         }
     }
-
+    
+    public class Hero extends Ground {
+        @Override
+        public void Draw(Graphics ctx, int x, int y) {
+            super.Draw(ctx, x, y);
+            
+//            Hero Colors
+            Color jumpsuit = new Color (82, 59, 255);
+            Color skin = new Color (238, 206, 179);
+            
+             ctx.setColor(jumpsuit);
+             ctx.fillRect(x+20,y+16, 24, 26);
+             ctx.fillRect(x+20,y+42,10,18);
+             ctx.fillRect(x+34, y+42, 10, 18);
+             
+             ctx.setColor(skin);
+             ctx.fillRect(x+12, y+16, 8, 18);
+             ctx.fillRect(x+44, y+16, 8, 18);
+             ctx.fillRect(x+26, y+4, 12, 12);
+             
+        }
+    }
+    
     Interfaces.IBlock[][] blocks; 
     int lvl_height;
     int lvl_width;
+    private Hero hero;
+    private int hero_x;
+    private int hero_y;
 
     public boolean Init() {
         String level1[] = {
@@ -68,7 +93,7 @@ public class Game {
             "X.XX..XX.X",
             "X........X",
             "X..XXXX..X",
-            "X........X",
+            "X.....@..X",
             "XXXXXXXXXX"
         };
         lvl_height = level1.length;
@@ -81,19 +106,43 @@ public class Game {
         for (int i = 0; i < lvl_height; i++) {
             if (level1[i].length() != lvl_width) {
                 return false;
+            } 
+        }
+//        Duplicates check
+        int Hero_Dublicate = 0;
+        for (int j = 0; j < lvl_height; j++) {
+            for(int i = 0; i < lvl_width; i++) {
+                char a = level1[j].charAt(i);
+                
+                if (a =='@') {
+                    Hero_Dublicate++;
+                }
             }
         }
-
+        if(Hero_Dublicate != 1) {
+            return false;
+        }
+    
         blocks = new Interfaces.IBlock[lvl_width][lvl_height];
         for (int j = 0; j < lvl_height; j++) {
             for(int i = 0; i < lvl_width; i++) {
                 char a = level1[j].charAt(i);
-
-                if ( a == 'X') {
-                    blocks[i][j] = new Brick();
-                } else {
-                    blocks[i][j] = new Ground();
-                }
+                
+                switch (a) {
+                     case 'X':
+                        blocks[i][j] = new Brick();
+                        break;
+                    case '.':
+                        blocks[i][j] = new Ground();
+                        break;
+                    case '@':
+                        blocks[i][j] = new Ground();
+                        hero = new Hero();
+                        hero_x = i;
+                        hero_y = j;
+                        break;
+                    }
+                
             }
         }
         return true;
@@ -115,6 +164,10 @@ public class Game {
     }
 
     public void Render(Graphics ctx) {
+        
+        if (blocks==null) {
+            return;
+        }
         ctx.setColor(Color.RED);
         ctx.drawString("Press SPACE button...", 800, 40);
 
@@ -132,7 +185,9 @@ public class Game {
             o = o + Config.BLOCK_WIDTH;
             b = 10;
         }
-
+        
+        hero.Draw(ctx, 10+hero_x*Config.BLOCK_WIDTH, 10+hero_y*Config.BLOCK_HEIGHT);
+        
         Brick brick = new Brick();
         Ground ground = new Ground();
         for (int i = 0; i < key_press_num + 1; i++) {
