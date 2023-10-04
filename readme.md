@@ -43,3 +43,19 @@ XXXXXXXXXX
 8. Make sure that coordinates of the `hero` does not go past the boundaries of the level
 
 9. Make sure that `hero` can walk only on the ground
+
+<h1>Task #3 - "Stones and targets"</h1>
+
+1. Create new sub-classes `Game.Target` with following properties:
+    * The `Game.Target.Draw()` method should draw a 64x64 block that would look like target drawn on floor
+    * Create `Game.Target` instances when detecting `0` char in level descriptor
+    * Store all `Game.Target` instances in `blocks[]` array
+
+2. Create new sub-classes `Game.Stone` that with following properties
+    * The `Game.Stone.Draw()` method should draw a 64x64 block that would look like a stone laying on the floor
+    * The `Game.Stone` should have the `pos_x` and `pos_y` coordinates as public members holding correct coordinate of the instance
+    * Create `Game.Stone` instance when detecting `#` char in level description
+    * Store all `Game.Stone` instances in new private array called `targets`
+    * Draw contents of the `targets` array in `GameRender()` method
+
+3. Make sure that game quits if number of stones is not equal to number of targets

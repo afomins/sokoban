@@ -11,9 +11,10 @@ public class Game {
     public class Ground implements Interfaces.IBlock {
         @Override
         public void Draw(Graphics ctx, int x, int y) {
-           Color ground_brown = new Color(73, 50, 4);
-           Color nugget_yellow = new Color(118,87,25);
-           Color grass_green = new Color(31,82,15);
+            Color ground_brown = new Color(73, 50, 4);
+            Color nugget_yellow = new Color(118, 87, 25);
+            Color grass_green = new Color(31, 82, 15);
+
             ctx.setColor(ground_brown);
             ctx.fillRect(x, y, Config.BLOCK_WIDTH, Config.BLOCK_HEIGHT);
 
@@ -32,8 +33,9 @@ public class Game {
     public class Brick implements Interfaces.IBlock {
         @Override
         public void Draw(Graphics ctx, int x, int y) {
-        Color gray = new Color(115,113,110);
-        Color nugget_gray = new Color(88,87,83);
+            Color gray = new Color(115, 113, 110);
+            Color nugget_gray = new Color(88, 87, 83);
+
             ctx.setColor(gray);
             ctx.fillRect(x, y, Config.BLOCK_WIDTH, Config.BLOCK_HEIGHT);
             ctx.setColor(nugget_gray);
@@ -56,29 +58,28 @@ public class Game {
             ctx.fillRect(x + 48, y + 48, 12, 9);
         }
     }
-    
+
     public class Hero extends Ground {
         @Override
         public void Draw(Graphics ctx, int x, int y) {
             super.Draw(ctx, x, y);
-            
+
 //            Hero Colors
             Color jumpsuit = new Color (82, 59, 255);
             Color skin = new Color (238, 206, 179);
-            
-             ctx.setColor(jumpsuit);
-             ctx.fillRect(x+20,y+16, 24, 26);
-             ctx.fillRect(x+20,y+42,10,18);
-             ctx.fillRect(x+34, y+42, 10, 18);
-             
-             ctx.setColor(skin);
-             ctx.fillRect(x+12, y+16, 8, 18);
-             ctx.fillRect(x+44, y+16, 8, 18);
-             ctx.fillRect(x+26, y+4, 12, 12);
-             
+
+            ctx.setColor(jumpsuit);
+            ctx.fillRect(x + 20, y + 16, 24, 26);
+            ctx.fillRect(x + 20, y + 42, 10, 18);
+            ctx.fillRect(x + 34, y + 42, 10, 18);
+
+            ctx.setColor(skin);
+            ctx.fillRect(x + 12, y + 16, 8, 18);
+            ctx.fillRect(x + 44, y + 16, 8, 18);
+            ctx.fillRect(x + 26, y + 4, 12, 12);
         }
     }
-    
+
     Interfaces.IBlock[][] blocks; 
     int lvl_height;
     int lvl_width;
@@ -108,12 +109,12 @@ public class Game {
                 return false;
             } 
         }
+
 //        Duplicates check
         int Hero_Dublicate = 0;
         for (int j = 0; j < lvl_height; j++) {
-            for(int i = 0; i < lvl_width; i++) {
+            for (int i = 0; i < lvl_width; i++) {
                 char a = level1[j].charAt(i);
-                
                 if (a =='@') {
                     Hero_Dublicate++;
                 }
@@ -125,9 +126,9 @@ public class Game {
     
         blocks = new Interfaces.IBlock[lvl_width][lvl_height];
         for (int j = 0; j < lvl_height; j++) {
-            for(int i = 0; i < lvl_width; i++) {
+            for (int i = 0; i < lvl_width; i++) {
                 char a = level1[j].charAt(i);
-                
+
                 switch (a) {
                      case 'X':
                         blocks[i][j] = new Brick();
@@ -161,7 +162,7 @@ public class Game {
                 hero_y--;
                 redraw = true;
             }
-      }
+        }
         if (key_pressed.contains(KeyEvent.VK_DOWN)) {
             if(hero_y + 1 < lvl_height  && blocks[hero_x][hero_y + 1] instanceof Ground) {
                 hero_y++;
@@ -178,17 +179,11 @@ public class Game {
     }
 
     public void Render(Graphics ctx) {
-        
-        if (blocks==null) {
+        if (blocks == null) {
             return;
         }
-        
-        System.out.println("x=" + hero_x + "y=" + hero_y);
-        ctx.setColor(Color.RED);
-        ctx.drawString("Press SPACE button...", 800, 40);
 
-        ctx.setColor(Color.CYAN);
-        ctx.fillRect(140, 80, 128, 128);
+        System.out.println("x=" + hero_x + " y=" + hero_y);
 
         int o = 10;
         int b = 10;
@@ -201,10 +196,7 @@ public class Game {
             o = o + Config.BLOCK_WIDTH;
             b = 10;
         }
-        
-        hero.Draw(ctx, 10+hero_x*Config.BLOCK_WIDTH, 10+hero_y*Config.BLOCK_HEIGHT);
-        
-        Brick brick = new Brick();
-        Ground ground = new Ground();
+
+        hero.Draw(ctx, 10 + hero_x * Config.BLOCK_WIDTH, 10 + hero_y * Config.BLOCK_HEIGHT);
     }
 }
